@@ -71,7 +71,7 @@ def load_data(val_split=(32, 8), keypoints=[-6]):
     asf_data = [read_asf(f, keypoints) for f in asf_files]
     asf_data = np.row_stack([format_points(x[0], x[1], width, height) for x in asf_data])
 
-    train_ratio = val_split[0] / val_split[0] + val_split[1]
+    train_ratio = val_split[0] / (val_split[0] + val_split[1])
     train_imgs, val_imgs = np.split(imgs, [int(train_ratio * imgs.shape[0])], axis=0)
     train_asf, val_asf = np.split(asf_data, [int(train_ratio * imgs.shape[0])], axis=0)
 
