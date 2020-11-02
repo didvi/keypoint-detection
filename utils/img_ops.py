@@ -7,11 +7,6 @@ import matplotlib.pyplot as plt
 from math import ceil
 import os 
 
-def show_triangulation(img, points):
-    plt.triplot(matplotlib.tri.Triangulation(points.T[0], points.T[1]))
-    plt.imshow(img)
-    plt.show()
-
 def show(imgs):
     if isinstance(imgs, list):
         n_row = 2
