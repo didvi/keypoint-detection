@@ -45,9 +45,16 @@ def format_points(x, y, width, height):
 
 def rescale_and_center_crop(img, shape):
     scale = shape[0] / img.shape[0]
-    img = resize(img,(img.shape[0] * scale, int(img.shape[1] * scale)), anti_aliasing=True)
-    horiz_crop = (img.shape[1] - shape[1]) // 2
-    img = img[:, horiz_crop:-horiz_crop - 1]
+    img = resize(img,(img.shape[0] * scale, int(img.shape[1] * scale)))
+    
+    if img.shape[1] == shape[1]:
+        return img
+    
+    half = (img.shape[1] - shape[1]) / 2
+    i = int(img.shape[1] - shape[1] - half)
+    j = int(img.shape[1] - shape[1] - i)
+    img = img[:, i:-j]
+    
     return img
 
 def load_data(val_split=(32, 8), keypoints=[-6]):
