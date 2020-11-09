@@ -46,6 +46,9 @@
 <body>
     <br />
     <div class='body-class'>
+        <h1>Facial Keypoint Detection with Neural Networks
+        </h1>
+        <br>
         <h1>Nose Detection</h1>
 
         <div align="middle">
@@ -64,6 +67,11 @@
                         </div>
                     </td>
                 </tr>
+            </table>
+        </div>
+        <h2>Predictions</h2>
+        <div align='middle'>
+            <table>
                 <tr>
                     <td>
                         <div>
@@ -106,7 +114,7 @@
             off when the person in the image has their face turned to the left or right. This could be because most of
             the images in the dataset have people with their faces straight on.
         </p>
-
+        <br>
         <h1>Part 2: All Keypoints</h1>
         <p>Here is a visualization of some images from my data loader, with random cropping and jittering applied.</p>
         <div align="middle">
@@ -125,6 +133,7 @@
                 </tr>
             </table>
         </div>
+        <h2>Architecture</h2>
         <p>For this section, I used the following architecture: <br>
             Conv(32, filter_size=(5, 5)), <br>
             MaxPool((2, 2)), <br>
@@ -148,13 +157,16 @@
             Dense(512), <br>
             Relu, <br>
             Dense(58*2) <br>
+        </p>
 
+        <h2>Hyperparameters</h2>
+        <p></p>
             I used a batch size of 32, learning rate of 1e-4 with the adam optimizer, and I trained for 140 iterations.
             Here is the plot of the training and validation loss. Note that the x axis is iterations not epochs.
             <br>
         <div align='middle'><img src='images/part_2_loss.png' width="300px"></div>
         </p>
-
+        <h2>Predictions</h2>
         <div align="middle">
             <table>
                 <tr>
@@ -294,7 +306,7 @@
             <figcaption>Training and Validation Loss while training</figcaption>
         </div>
 
-
+        <h2>Predictions</h2>
         <h3>Here are some predictions on the test set.</h3>
         <div align="middle">
             <table>
