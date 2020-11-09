@@ -1,0 +1,343 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+    <style>
+        body {
+            margin: auto;
+            text-align: left;
+            font-weight: 300;
+            font-family: 'Open Sans', sans-serif;
+            color: #121212;
+        }
+
+        div.body-class {
+            padding: 100px;
+            width: 1000px;
+            margin: auto;
+            text-align: left;
+            font-weight: 300;
+            font-family: 'Open Sans', sans-serif;
+            color: #121212;
+        }
+
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        code {
+            background-color: lightgrey;
+        }
+    </style>
+    <title>CS 194</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+    <script
+        type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});</script>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML">
+        </script>
+</head>
+
+<body>
+    <br />
+    <div class='body-class'>
+        <h1>Nose Detection</h1>
+
+        <div align="middle">
+            <table>
+                <tr>
+                    <td>
+                        <div>
+                            <img src="images/data_loader_1.png" width="300px" />
+                            <figcaption align="middle">Data loader example</figcaption>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <img src="images/loss_part1.png" width="300px" />
+                            <figcaption align="middle">Loss during training</figcaption>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img src="images/Screen Shot 2020-11-02 at 10.52.54 PM.png" width="300px" />
+                            <figcaption align="middle">Validation Images</figcaption>
+                        </div>
+                    </td>
+                    <td>
+                        <img src="images/Screen Shot 2020-11-02 at 10.53.29 PM.png" width=" 300px" />
+                        <figcaption align="middle">Validation Images</figcaption>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img src="images/Screen Shot 2020-11-02 at 10.53.45 PM.png" width="300px" />
+                            <figcaption align="middle">Validation Images</figcaption>
+                        </div>
+                    </td>
+                    <td>
+                        <img src="images/Screen Shot 2020-11-02 at 10.53.54 PM.png" width=" 300px" />
+                        <figcaption align="middle">Validation Images</figcaption>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img src="images/val_bad.png" width="300px" />
+                            <figcaption align="middle">Validation Images Failure Case</figcaption>
+                        </div>
+                    </td>
+                    <td>
+                        <img src="images/val_bad2.png" width=" 300px" />
+                        <figcaption align="middle">Validation Images Failure Case</figcaption>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <p>As you can see in the last images, this model does not work all of the time. The predictions are often quite
+            off when the person in the image has their face turned to the left or right. This could be because most of
+            the images in the dataset have people with their faces straight on.
+        </p>
+
+        <h1>Part 2: All Keypoints</h1>
+        <p>Here is a visualization of some images from my data loader, with random cropping and jittering applied.</p>
+        <div align="middle">
+            <table>
+                <tr>
+                    <td>
+                        <div>
+                            <img src="images/data_loader3.png" width="300px" />
+                            <figcaption align="middle">Loaded data</figcaption>
+                        </div>
+                    </td>
+                    <td>
+                        <img src="images/data_loader4.png"" width=" 300px" />
+                        <figcaption align="middle">Loaded data with different crop</figcaption>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <p>For this section, I used the following architecture: <br>
+            Conv(32, filter_size=(5, 5)), <br>
+            MaxPool((2, 2)), <br>
+            Relu, <br>
+            Conv(32, (5, 5)), <br>
+            MaxPool((2, 2)), <br>
+            Relu, <br>
+            Conv(32, filter_size=(3, 3), padding='SAME'), <br>
+            MaxPool((2, 2)), <br>
+            Relu, <br>
+            Conv(32, filter_size=(3, 3), padding='SAME'), <br>
+            MaxPool((2, 2)), <br>
+            Relu, <br>
+            Conv(64, filter_size=(3, 3), padding='SAME'), <br>
+            MaxPool((2, 2)), <br>
+            Relu, <br>
+            Conv(64, filter_size=(3, 3), padding="SAME"), <br>
+            MaxPool((2, 2)), <br>
+            Relu, <br>
+            Flatten, <br>
+            Dense(512), <br>
+            Relu, <br>
+            Dense(58*2) <br>
+
+            I used a batch size of 32, learning rate of 1e-4 with the adam optimizer, and I trained for 140 iterations.
+            Here is the plot of the training and validation loss. Note that the x axis is iterations not epochs.
+            <br>
+        <div align='middle'><img src='images/part_2_loss.png' width="300px"></div>
+        </p>
+
+        <div align="middle">
+            <table>
+                <tr>
+                    <td>
+                        <div>
+                            <img src="images/part2_val.png" width="300px" />
+                            <figcaption align="middle">Validation Images</figcaption>
+                        </div>
+                    </td>
+                    <td>
+                        <img src="images/part2_val2.png" width=" 300px" />
+                        <figcaption align="middle">Validation Images</figcaption>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img src="images/part2_val_bad.png" width="300px" />
+                            <figcaption align="middle">Validation Images Failure</figcaption>
+                        </div>
+                    </td>
+                    <td>
+                        <img src="images/part2_val_bad2.png" width=" 300px" />
+                        <figcaption align="middle">Validation Images Failure</figcaption>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <p>Similar to the first part, this model seems to fail when the person has their face turned to the side. When
+            there are images of the person looking straight at the camera, the predictions are pretty close. There is
+            less information about the face when half of it is turned away from the camera which makes this task harder
+            for the model to achieve. There are also less images of the face turned in the training set than of faces looking straight on.</p>
+
+
+
+
+        <h1>Part 3: A Larger Dataset</h1>
+        <p>For this part, I used a pretrained resnet18 on a larger dataset. For the kaggle competition, I recieved a
+            mean absolute error of: 16.46337.</p>
+
+        <h2>Detailed Architecture</h2>
+        <p>This is just resnet18 with input channels 1 instead of 3 and output 68*2.</p>
+        <p>
+            ResNet( <br>
+            (resnet18): ResNet( <br>
+            (conv1): Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False) <br>
+            (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            (relu): ReLU(inplace=True) <br>
+            (maxpool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False) <br>
+            (layer1): Sequential( <br>
+            (0): BasicBlock( <br>
+            (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) <br>
+            (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            (relu): ReLU(inplace=True) <br>
+            (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) <br>
+            (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            ) <br>
+            (1): BasicBlock( <br>
+            (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) <br>
+            (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            (relu): ReLU(inplace=True) <br>
+            (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) <br>
+            (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            ) <br>
+            ) <br>
+            (layer2): Sequential( <br>
+            (0): BasicBlock( <br>
+            (conv1): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False) <br>
+            (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            (relu): ReLU(inplace=True) <br>
+            (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) <br>
+            (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            (downsample): Sequential( <br>
+            (0): Conv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False) <br>
+            (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            ) <br>
+            ) <br>
+            (1): BasicBlock( <br>
+            (conv1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) <br>
+            (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            (relu): ReLU(inplace=True) <br>
+            (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) <br>
+            (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            ) <br>
+            ) <br>
+            (layer3): Sequential( <br>
+            (0): BasicBlock( <br>
+            (conv1): Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False) <br>
+            (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            (relu): ReLU(inplace=True) <br>
+            (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) <br>
+            (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            (downsample): Sequential( <br>
+            (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), bias=False) <br>
+            (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            ) <br>
+            ) <br>
+            (1): BasicBlock( <br>
+            (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) <br>
+            (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            (relu): ReLU(inplace=True) <br>
+            (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) <br>
+            (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            ) <br>
+            ) <br>
+            (layer4): Sequential( <br>
+            (0): BasicBlock( <br>
+            (conv1): Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False) <br>
+            (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            (relu): ReLU(inplace=True) <br>
+            (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) <br>
+            (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            (downsample): Sequential( <br>
+            (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False) <br>
+            (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            ) <br>
+            ) <br>
+            (1): BasicBlock( <br>
+            (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) <br>
+            (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            (relu): ReLU(inplace=True) <br>
+            (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) <br>
+            (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) <br>
+            ) <br>
+            ) <br>
+            (avgpool): AdaptiveAvgPool2d(output_size=(1, 1)) <br>
+            (fc): Linear(in_features=512, out_features=136, bias=True) <br>
+            ) <br>
+            ) <br>
+        </p>
+
+        <h2>Hyperparameters</h2>
+        <p>My learning rate was 1e-4, batch size was 32, and I trained for 18 epochs. Note this plot has a lot less
+            information since I trained for much longer and only saved per-epoch loss.</p>
+        <div align="middle">
+            <img width='300px' src='images/part3_loss.png'>
+            <figcaption>Training and Validation Loss while training</figcaption>
+        </div>
+
+
+        <h3>Here are some predictions on the test set.</h3>
+        <div align="middle">
+            <table>
+                <tr>
+                    <td>
+                        <img src="images/test_part3.png" width="300px" />
+                        <figcaption align="middle">Predictions on the test set.</figcaption>
+                    </td>
+                    <td>
+                        <img src="images/test_part3_.png"" width=" 300px" />
+                        <figcaption align="middle">Predictions on the test set.</figcaption>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <p>Here are some keypoint detections on personal photos. Predictions seem to work the best when I crop the image
+            so that only the face is visible. Background and smaller faces seem to perform very poorly. This makes sense
+            since the training images are cropped very close to the face.</p>
+        <div align="middle">
+            <table>
+                <tr>
+                    <td>
+                        <img src="images/Screen Shot 2020-11-08 at 10.02.31 PM.png" width="300px" />
+                    </td>
+                    <td>
+                        <img src="images/Screen Shot 2020-11-08 at 10.02.45 PM.png" width=" 300px" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="images/Screen Shot 2020-11-08 at 10.06.19 PM.png" width="300px" />
+                        <figcaption>Best one and closest crop to face.</figcaption>
+
+                    </td>
+                    <td>
+                        <img src="images/Screen Shot 2020-11-08 at 10.09.18 PM.png" width=" 300px" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+</body>
+
+</html>
