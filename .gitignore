@@ -134,3 +134,4 @@ dmypy.json
 out/*
 imm_face_db/*
 checkpoints/*
+test_personal/*
